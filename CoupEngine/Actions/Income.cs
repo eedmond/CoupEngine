@@ -4,9 +4,9 @@ using System.Text;
 
 namespace CoupEngine.Turns
 {
-    internal class Income : Turn
+    internal class Income : GameAction
     {
-        public override void Perform(CoupEngine engine)
+        public override void PerformInternal(CoupEngine engine)
         {
             int incomeGained = Math.Min(engine.MoneyPool, 2);
             engine.MoneyPool -= incomeGained;

@@ -30,7 +30,7 @@ namespace CoupEngine
         {
             while (PlayerList.Count > 1)
             {
-                Turn turn = ActivePlayer.GetTurnAction();
+                GameAction turn = ActivePlayer.ChooseNextAction();
                 turn.Perform(this);
             }
         }
