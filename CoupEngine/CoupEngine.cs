@@ -16,6 +16,8 @@ namespace CoupEngine
             {
                 Turn turn = ActivePlayer.GetTurnAction();
                 turn.Perform(this);
+
+                ActivePlayerIndex++;
             }
         }
     }
