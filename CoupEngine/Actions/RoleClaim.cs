@@ -16,7 +16,7 @@ namespace CoupEngine.Turns
 
         public override bool CanPlayerPerformAction()
         {
-            return ActivePlayer.HasRole(claimedRole);
+            return ActivePlayer.HasRole(ClaimedRole);
         }
 
         public override void PerformInternal(CoupEngine engine)
