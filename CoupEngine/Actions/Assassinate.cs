@@ -28,5 +28,10 @@ namespace CoupEngine.Actions
         {
             AssassinatedPlayer.LoseLife(engine);
         }
+
+        public override string SerializeAction()
+        {
+            return $"AS {ActivePlayer.PlayerId} -> {AssassinatedPlayer.PlayerId}";
+        }
     }
 }

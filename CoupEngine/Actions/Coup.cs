@@ -27,5 +27,10 @@ namespace CoupEngine.Actions
             ActivePlayer.Money -= Cost;
             CoupedPlayer.LoseLife(engine);
         }
+
+        public override string SerializeAction()
+        {
+            return $"COUP {ActivePlayer.PlayerId} -> {CoupedPlayer.PlayerId}";
+        }
     }
 }

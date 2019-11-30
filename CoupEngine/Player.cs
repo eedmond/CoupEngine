@@ -129,6 +129,8 @@ namespace CoupEngine
             }
         }
 
+        public int PlayerId { get; }
+
         private Role role1;
         private Role? role2;
     }

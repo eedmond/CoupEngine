@@ -26,6 +26,8 @@ namespace CoupEngine
 
         public abstract bool CanPlayerPerformAction();
 
+        public abstract string SerializeAction();
+
         public virtual bool IsBlockedByRole(Role role)
         {
             return false;

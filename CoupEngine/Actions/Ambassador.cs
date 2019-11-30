@@ -27,5 +27,10 @@ namespace CoupEngine.Actions
                 engine.RolePool.ReturnRole(role);
             }
         }
+
+        public override string SerializeAction()
+        {
+            return $"AM {ActivePlayer.PlayerId}";
+        }
     }
 }

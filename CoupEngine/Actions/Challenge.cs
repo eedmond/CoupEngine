@@ -23,5 +23,10 @@ namespace CoupEngine.Turns
                 OriginalAction.IsValid = false;
             }
         }
+
+        public override string SerializeAction()
+        {
+            return $"CH! {ActivePlayer.PlayerId}";
+        }
     }
 }
