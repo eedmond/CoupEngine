@@ -4,8 +4,8 @@ using System.Text;
 
 namespace CoupEngine
 {
-    public class Player
+    internal class Player
     {
-
+        public int Money = 0;
     }
 }

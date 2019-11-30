@@ -8,7 +8,9 @@ namespace CoupEngine.Turns
     {
         public override void Perform(CoupEngine engine)
         {
-
+            int incomeGained = Math.Min(engine.MoneyPool, 2);
+            engine.MoneyPool -= incomeGained;
+            engine.ActivePlayer.Money += incomeGained;
         }
     }
 }
