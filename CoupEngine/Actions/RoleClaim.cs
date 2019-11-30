@@ -18,7 +18,7 @@ namespace CoupEngine.Turns
 
         public override void PerformInternal(CoupEngine engine)
         {
-            throw new NotImplementedException();
+            OriginalAction.IsValid = false;
         }
     }
 }
