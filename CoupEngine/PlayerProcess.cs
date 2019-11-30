@@ -75,7 +75,7 @@ namespace CoupEngine
                     break;
 
                 case ProcessType.Python:
-                    startInfo.FileName = "pythong";
+                    startInfo.FileName = "python";
                     startInfo.Arguments = processString;
                     break;
             }
