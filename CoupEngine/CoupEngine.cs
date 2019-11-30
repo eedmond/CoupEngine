@@ -10,15 +10,11 @@ namespace CoupEngine
         public int ActivePlayerIndex { get; private set; } = 0;
         public Player ActivePlayer { get { return PlayerList[ActivePlayerIndex]; } }
 
-        private Dictionary<TurnActionType, Turn> turnLookup;
-
         public void PlayGame()
         {
             while (PlayerList.Count > 1)
             {
-                TurnActionType turnType = ActivePlayer.GetTurnAction();
-
-                Turn turn = turnLookup[turnType];
+                Turn turn = ActivePlayer.GetTurnAction();
                 turn.Perform(this);
             }
         }
