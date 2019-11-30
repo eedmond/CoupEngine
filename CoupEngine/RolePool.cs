@@ -12,26 +12,17 @@ namespace CoupEngine
             roles = new List<Role> { role1, role2, role3 };
         }
 
-        public List<Role> DrawTwoRandomRoles()
+        public Role DrawRandomRole()
         {
-            Debug.Assert(roles.Count == 3);
-            int indexKept = random.Next(3);
-            var keptRole = roles[indexKept];
-
-            var result = roles;
-            result.RemoveAt(indexKept);
-
-            roles = new List<Role> { keptRole };
-
+            int index = random.Next(roles.Count);
+            var result = roles[index];
+            roles.RemoveAt(index);
             return result;
         }
 
-        public void ReturnTwoCards(Role role1, Role role2)
+        public void ReturnRole(Role role)
         {
-            roles.Add(role1);
-            roles.Add(role2);
-
-            Debug.Assert(roles.Count == 3);
+            roles.Add(role);
         }
 
         private List<Role> roles;
