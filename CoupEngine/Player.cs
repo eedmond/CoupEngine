@@ -4,8 +4,29 @@ using System.Text;
 
 namespace CoupEngine
 {
-    public class Player
+    internal class Player
     {
+        public void LoseLife()
+        {
 
+        }
+
+        public Turn GetTurnAction()
+        {
+
+        }
+
+        public void NotifyEliminated()
+        {
+        }
+
+        public void NotifyPlayerElminated(Player player)
+        {
+
+        }
+
+        public void NotifyWin()
+        {
+        }
     }
 }

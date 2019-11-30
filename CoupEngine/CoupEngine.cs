@@ -31,7 +31,20 @@ namespace CoupEngine
                 Turn turn = ActivePlayer.GetTurnAction();
                 turn.Perform(this);
 
-                ActivePlayerIndex++;
+                ActivePlayerIndex = (ActivePlayerIndex + 1) % PlayerList.Count;
+            }
+
+            PlayerList[0].NotifyWin();
+        }
+
+        public RemovePlayer(Player player)
+        {
+            player.NotifyEliminated();
+            PlayerList.Remove(player);
+
+            foreach (var remainingPlayer in PlayerList)
+            {
+                remainingPlayer.NotifyPlayerEliminated(player);
             }
         }
     }
