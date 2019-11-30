@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 
 namespace CoupEngine
@@ -39,12 +40,15 @@ namespace CoupEngine
     // Serialization for requests:
     // Whenever the engine wants a response from a player, one of these will be sent:
     //   R? : request for a 'response' to an action another player took (challenge or claim)
-    //   L? : losing a life, request which card they want to reveal (this doesn't happen if they only have one card)
+    //   L? : losing a life, request which card they want to reveal (this doesn't happen if they only have one choice)
+    //         Expected response: L <role>
     //   A? : request for what action they want to take (they are the active player now)
     //   AM? <role> <role> : here are the cards drawn by the Ambassador action, request for what they want to discard
+    //                       Expected response: AM <role> <role>
     //
     // Serialization for responses:
-    // Responses should be similar to above actions, but no 'actingplayer' id is necessary. In general this should look like:
+    // Responses for actions (the 'A?' or 'R?' request) should be similar to above actions, but no 'actingplayer' id is necessary.
+    // In general this should look like:
     //    <role/action> [<target player>]
     // For example:
     //    IN
@@ -59,6 +63,8 @@ namespace CoupEngine
     // - EL : You were eliminated :(
     // - GG : You won!
 
+    // TODO?: change the Ambassador protocol to be more generic (2 draw notifications and 2 discard notifications)
+
     internal class Player
     {
         public void LoseLife(CoupEngine engine)
@@ -69,19 +75,47 @@ namespace CoupEngine
 
         public GameAction ChooseNextAction()
         {
-            throw new NotImplementedException();
+            process.SendMessage("A?");
+            string response = process.ReceiveResponse();
+            GameAction action = parser.ParseAction(response, this);
+            
+            if (action == null) // invalid response
+            {
+                // TODO: log warning
+                return new Income(this);
+            }
+            
+            // TODO: validate / execute
+            // - money cost
+            // - targeted player exists at all
+            // - targeted player hasn't been eliminated
+
+            return action;
         }
 
-        public void NotifyAction(GameAction action, Player actingPlayer)
+        public void NotifyAction(GameAction action)
         {
-            // TODO: actually send string
-            string toSend = action.SerializeAction();
+            process.SendMessage(action.SerializeAction());
         }
 
         public ResponseAction GetResponse()
         {
-            // TODO: ask the process which role they want to kill, and call LoseLifeInternal
-            throw new NotImplementedException();
+            process.SendMessage("R?");
+            string response = process.ReceiveResponse();
+            ResponseAction action = parser.ParseResponse(response, this);
+
+            if (action == null) // invalid response
+            {
+                // TODO: log warning
+                return null; // Don't do anything
+            }
+
+            // TODO: validate
+            // - The action can be blocked (i.e. Ambassador can be challenged, but not blocked)
+            // - The action can be challenged (i.e. Foreign Aid can be blocked, but not challenged)
+            // - A blocking claim is even valid (i.e. Duke doesn't block Assassin)
+
+            return action;
         }
 
         private void LoseLifeInternal(CoupEngine engine, bool loseRole1)
@@ -131,38 +165,54 @@ namespace CoupEngine
             return role1 == role;
         }
 
-        public IEnumerable<Role> LookAndReturnToPool(IEnumerable<Role> drawnCards)
+        public IEnumerable<Role> LookAndReturnToPool(IList<Role> drawnCards)
         {
+            var roleStrings = drawnCards.Select(r => parser.SerializeRole(r));
+            var allRoles = String.Join(' ', roleStrings);
+
+            process.SendMessage($"AM? {allRoles}");
+            string response = process.ReceiveResponse();
+
+            var rolesToReturn = parser.ParseAmbassador(response);
+            if (rolesToReturn == null) // Invalid response
+            {
+                // TODO: log warning
+                // Don't make any changes to the player's hand
+                return drawnCards; 
+            }
+
+            // TODO: validate
+            // - the returned cards are ones that were drawn/owned
+
+            // TODO: implement - keep the cards that weren't returned
             throw new NotImplementedException();
         }
 
-        #region Notify Stubs
+        #region Notify Messages
 
         public void NotifyEliminated()
         {
             role2 = null;
             Eliminated = true;
 
-            // TODO: tell the process that we lost :(
-            throw new NotImplementedException();
+            // Tell the process that we lost :(
+            process.SendMessage("EL");
         }
 
         public void NotifyPlayerEliminated(Player player)
         {
-            // TODO: tell the process that 'player' 
-            throw new NotImplementedException();
+            process.SendMessage($"RIP {player.PlayerId}");
         }
 
         public void NotifyWin()
         {
-            // TODO: tell the process that they won!
-            throw new NotImplementedException();
+            process.SendMessage("GG");
         }
 
         public void NotifyLifeLost(Player player, Role role)
         {
-            // TODO: tell the process that 'player' lost a life and revealed the card 'role'
-            throw new NotImplementedException();
+            // Tell the process that 'player' lost a life and revealed the card 'role'
+            process.SendMessage($"L {player.PlayerId} {parser.SerializeRole(role)}");
         }
 
         #endregion
@@ -189,5 +239,6 @@ namespace CoupEngine
         private Role? role2;
 
         private PlayerProcess process;
+        private ResponseParser parser;
     }
 }

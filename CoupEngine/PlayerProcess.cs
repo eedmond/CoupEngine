@@ -83,6 +83,7 @@ namespace CoupEngine
 
         public void SendMessage(string message)
         {
+            // Note: if 'message' doesn't have a newline at the end, one should be added
             throw new NotImplementedException();
         }
 
