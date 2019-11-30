@@ -6,5 +6,6 @@ namespace CoupEngine
 {
     public class Player
     {
+
     }
 }
