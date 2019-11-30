@@ -8,19 +8,19 @@ namespace CoupEngine
     internal class CoupEngine
     {
         public List<Player> PlayerList { get; private set; }
-        public int ActivePlayerIndex { get; private set; } = 0;
-        public Player ActivePlayer { get { return PlayerList[ActivePlayerIndex]; } }
-        public IEnumerable<Player> OtherPlayers
+        private int ActivePlayerIndex { get; set; } = 0;
+        private Player ActivePlayer { get { return PlayerList[ActivePlayerIndex]; } }
+
+        public IEnumerable<Player> OtherPlayers(Player player)
         {
-            get
+            int playerIndex = GetPlayerIndex(player);
+
+            // Returns all players other than the active player, in turn order
+            // starting from the player after the active player
+            for (int i = 1; i < PlayerList.Count; ++i)
             {
-                // Returns all players other than the active player, in turn order
-                // starting from the player after the active player
-                for (int i = 1; i < PlayerList.Count; ++i)
-                {
-                    int playerIndex = (ActivePlayerIndex + i) % PlayerList.Count;
-                    yield return PlayerList[playerIndex];
-                }
+                int otherPlayerIndex = (playerIndex + i) % PlayerList.Count;
+                yield return PlayerList[otherPlayerIndex];
             }
         }
 
@@ -33,6 +33,19 @@ namespace CoupEngine
                 GameAction turn = ActivePlayer.ChooseNextAction();
                 turn.Perform(this);
             }
+        }
+
+        private int GetPlayerIndex(Player player)
+        {
+            for (int i = 0; i < PlayerList.Count; ++i)
+            {
+                if (PlayerList[i] == player)
+                {
+                    return i;
+                }
+            }
+
+            throw new ArgumentException("No index for player was found");
         }
     }
 }
