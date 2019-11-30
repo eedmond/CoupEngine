@@ -18,6 +18,8 @@ namespace CoupEngine
         }
 
         private ConcurrentQueue<string> messages = new ConcurrentQueue<string>();
+        private Process process = new Process();
+        private WaitHandle messageHandle = new WaitHandle();
 
         public PlayerProcess(string processString)
         {
@@ -31,15 +33,14 @@ namespace CoupEngine
 
             SetStartArguments(startInfo, processString, processType);
 
-            Process p = new Process();
-            p.StartInfo = startInfo;
-            p.OutputDataReceived += (s, a) =>
+            process.StartInfo = startInfo;
+            process.OutputDataReceived += (s, a) =>
             {
                 messages.Enqueue(a.Data);
             };
 
-            p.Start();
-            p.BeginOutputReadLine();
+            process.Start();
+            process.BeginOutputReadLine();
         }
 
         private ProcessType ParseProcessType(string processString)
@@ -84,7 +85,7 @@ namespace CoupEngine
 
         public void SendMessage(string message)
         {
-            throw new NotImplementedException();
+            process.StandardInput.WriteLine("Greetings");
         }
 
         public string ReceiveResponse()
