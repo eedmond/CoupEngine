@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -16,6 +17,8 @@ namespace CoupEngine
             Javascript
         }
 
+        private ConcurrentQueue<string> messages = new ConcurrentQueue<string>();
+
         public PlayerProcess(string processString)
         {
             ProcessType processType = ParseProcessType(processString);
@@ -32,13 +35,11 @@ namespace CoupEngine
             p.StartInfo = startInfo;
             p.OutputDataReceived += (s, a) =>
             {
-                Console.WriteLine("Received: {0}", a.Data);
-                p.StandardInput.WriteLine("Greetings");
+                messages.Enqueue(a.Data);
             };
 
             p.Start();
             p.BeginOutputReadLine();
-            p.WaitForExit();
         }
 
         private ProcessType ParseProcessType(string processString)
