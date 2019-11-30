@@ -4,7 +4,8 @@ using System.Text;
 
 namespace CoupEngine
 {
-    class Turn
+    internal abstract class Turn
     {
+        public abstract void Perform(CoupEngine engine);
     }
 }

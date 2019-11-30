@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CoupEngine
 {
-    class CoupEngine
+    internal class CoupEngine
     {
         TurnManager turnManager;
 
