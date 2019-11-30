@@ -26,6 +26,11 @@ namespace CoupEngine
 
         public abstract bool CanPlayerPerformAction();
 
+        public virtual bool IsBlockedByRole(Role role)
+        {
+            return false;
+        }
+
         public bool IsValid = true;
 
         protected Player ActivePlayer;
