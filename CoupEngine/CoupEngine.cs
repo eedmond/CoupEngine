@@ -39,7 +39,7 @@ namespace CoupEngine
             PlayerList[0].NotifyWin();
         }
 
-        public RemovePlayer(Player player)
+        public void EliminatePlayer(Player player)
         {
             player.NotifyEliminated();
             PlayerList.Remove(player);
