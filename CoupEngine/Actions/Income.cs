@@ -6,6 +6,8 @@ namespace CoupEngine.Turns
 {
     internal class Income : GameAction
     {
+        private const int MoneyGained = 3;
+
         public Income(Player activePlayer) : base(activePlayer)
         {
             AcceptsResponses = false;
@@ -18,7 +20,7 @@ namespace CoupEngine.Turns
 
         public override void PerformInternal(CoupEngine engine)
         {
-            int incomeGained = Math.Min(engine.MoneyPool, 2);
+            int incomeGained = Math.Min(engine.MoneyPool, MoneyGained);
             engine.MoneyPool -= incomeGained;
             this.ActivePlayer.Money += incomeGained;
         }
