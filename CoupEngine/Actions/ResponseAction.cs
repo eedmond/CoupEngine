@@ -4,11 +4,7 @@ using System.Text;
 
 namespace CoupEngine.Turns
 {
-    internal class Income : Turn
+    internal abstract class ResponseAction : GameAction
     {
-        public override void Perform(CoupEngine engine)
-        {
-
-        }
     }
 }

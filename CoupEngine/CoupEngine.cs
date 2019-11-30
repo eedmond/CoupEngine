@@ -24,11 +24,13 @@ namespace CoupEngine
             }
         }
 
+        public int MoneyPool = 30;
+
         public void PlayGame()
         {
             while (PlayerList.Count > 1)
             {
-                Turn turn = ActivePlayer.GetTurnAction();
+                GameAction turn = ActivePlayer.ChooseNextAction();
                 turn.Perform(this);
 
                 ActivePlayerIndex = (ActivePlayerIndex + 1) % PlayerList.Count;

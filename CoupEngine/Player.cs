@@ -28,5 +28,7 @@ namespace CoupEngine
         public void NotifyWin()
         {
         }
+
+        public int Money = 0;
     }
 }
