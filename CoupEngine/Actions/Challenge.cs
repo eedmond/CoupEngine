@@ -26,7 +26,7 @@ namespace CoupEngine.Turns
 
         public override string SerializeAction()
         {
-            return $"CH! {ActivePlayer.PlayerId}";
+            return $"CH {ActivePlayer.PlayerId}";
         }
     }
 }

@@ -11,28 +11,53 @@ namespace CoupEngine
     // then comes any details (who played it, etc), finally ended by a newline.
     // If we are expecting a response, the last thing before the newline should be a '?' character
     // 
-    // Serialization for our actions (details excluded)
-    // - AM : ambassador
-    // - AS : assassinate
-    // - CH! : challenge
-    // - COUP : coup
-    // - FA : Foreign Aid
-    // - IN : Income
-    // - CLAIM : Role claim
-    // - CAP : captain / steal
-    //
-    // Serialization for requests:
-    // - R? : request for a 'response' to an action another player took (challenge or claim)
-    // - L? : losing a life, request which card they want to reveal (this doesn't happen if they only have one card)
-    // - A? : request for what action they want to take (they are the active player now)
-    //
-    // Serialization for reponses should be either a serialization for one of the actions above. If the action targets a player,
-    // just put the player number ('PlayerId') as a second word.
-    // For the response to 'L?' it should be the abbreviated name of a role, which are listed as above, or in addition:
-    // - CONT : Contessa
-    // - DUKE : Duke
-    //
     // Note that all requests/responses should be considered case-insensitive: the process doesn't have to care about receiving/outputing 'AM' vs 'am' vs 'Am'
+    //
+    // Serialization for roles:
+    //   AM : ambassador
+    //   AS : assassin
+    //   CAP : captain
+    //   CON : contessa
+    //   DUKE: duke
+    // 
+    // Notifications that an action was taken:
+    // Whenever a player takes an action, all *other* players are notified with a message. (The player itself should obviously know what happened)
+    // If an action is obviously associated with a role, then it will look like this:
+    //    <role> <acting player> ['->' <targeted player>]
+    // For example:
+    //    DUKE 2
+    //    CAP 3 -> 1
+    //    AS 1 -> 2
+    //
+    // For actions that don't have an associated role, it will be the following:
+    //   IN <actingplayer> : Income
+    //   FA <actingplayer> : Foreign Aid
+    //   CH <actingplayer> : Challenge
+    //   CLAIM <actingplayer> <role> : Role claim (for blocking another action)
+    // 
+
+    // Serialization for requests:
+    // Whenever the engine wants a response from a player, one of these will be sent:
+    //   R? : request for a 'response' to an action another player took (challenge or claim)
+    //   L? : losing a life, request which card they want to reveal (this doesn't happen if they only have one card)
+    //   A? : request for what action they want to take (they are the active player now)
+    //   AM? <role> <role> : here are the cards drawn by the Ambassador action, request for what they want to discard
+    //
+    // Serialization for responses:
+    // Responses should be similar to above actions, but no 'actingplayer' id is necessary. In general this should look like:
+    //    <role/action> [<target player>]
+    // For example:
+    //    IN
+    //    AS 2
+    //    CLAIM CON
+
+    // Other notifications:
+    // - GLHF <id> <numplayers> <role> <role>: Game start notification, let's the process know which id it is, # players, starting cards
+    //                                          (Note that player id 0 always goes first)
+    // - L <player> <role> : The given player lost a life, and revealed this role
+    // - RIP <player> : The given player was eliminated
+    // - EL : You were eliminated :(
+    // - GG : You won!
 
     internal class Player
     {
@@ -162,5 +187,7 @@ namespace CoupEngine
 
         private Role role1;
         private Role? role2;
+
+        private PlayerProcess process;
     }
 }
