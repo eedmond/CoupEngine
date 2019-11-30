@@ -10,6 +10,7 @@ namespace CoupEngine
     {
         public void LoseLife(CoupEngine engine)
         {
+            // TODO: decide which card to lose, and call LoseLifeInternal with it
             throw new NotImplementedException();
         }
 
@@ -76,7 +77,7 @@ namespace CoupEngine
             return role1 == role;
         }
 
-        public GameAction GetTurnAction()
+        public IEnumerable<Role> LookAndReturnToPool(IEnumerable<Role> drawnCards)
         {
             throw new NotImplementedException();
         }
