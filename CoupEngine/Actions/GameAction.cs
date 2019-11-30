@@ -35,7 +35,7 @@ namespace CoupEngine
         {
             foreach (Player player in engine.OtherPlayers(ActivePlayer))
             {
-                player.BroadcastTurn(this, ActivePlayer);
+                player.NotifyAction(this, ActivePlayer);
             }
         }
 
@@ -47,7 +47,7 @@ namespace CoupEngine
 
                 if ((response != null) && this.AcceptsResponses)
                 {
-                    response.Perform();
+                    response.Perform(engine);
 
                     // If this action has been canceled, break out of response loop
                     if (!this.IsValid)

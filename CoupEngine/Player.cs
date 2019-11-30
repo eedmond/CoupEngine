@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoupEngine.Turns;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,25 +9,37 @@ namespace CoupEngine
     {
         public void LoseLife()
         {
-
+            throw new NotImplementedException();
         }
 
-        public Turn GetTurnAction()
+        public GameAction ChooseNextAction()
         {
+            throw new NotImplementedException();
+        }
 
+        public void NotifyAction(GameAction action, Player actingPlayer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ResponseAction GetResponse()
+        {
+            throw new NotImplementedException();
         }
 
         public void NotifyEliminated()
         {
+            throw new NotImplementedException();
         }
 
         public void NotifyPlayerElminated(Player player)
         {
-
+            throw new NotImplementedException();
         }
 
         public void NotifyWin()
         {
+            throw new NotImplementedException();
         }
 
         public int Money = 0;
