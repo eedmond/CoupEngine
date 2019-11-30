@@ -19,6 +19,11 @@ namespace CoupEngine.Actions
             return ActivePlayer.HasRole(Role.Assassin);
         }
 
+        public override bool IsBlockedByRole(Role role)
+        {
+            return role == Role.Contessa;
+        }
+
         public override void PerformInternal(CoupEngine engine)
         {
             AssassinatedPlayer.LoseLife(engine);
