@@ -17,9 +17,10 @@ namespace CoupEngine
             Javascript
         }
 
+        private readonly TimeSpan responseTimeout = TimeSpan.FromSeconds(3);
         private ConcurrentQueue<string> messages = new ConcurrentQueue<string>();
         private Process process = new Process();
-        private WaitHandle messageHandle = new WaitHandle();
+        private AutoResetEvent messageHandle = new AutoResetEvent(false);
 
         public PlayerProcess(string processString)
         {
@@ -37,6 +38,7 @@ namespace CoupEngine
             process.OutputDataReceived += (s, a) =>
             {
                 messages.Enqueue(a.Data);
+                messageHandle.Set();
             };
 
             process.Start();
@@ -85,12 +87,18 @@ namespace CoupEngine
 
         public void SendMessage(string message)
         {
-            process.StandardInput.WriteLine("Greetings");
+            process.StandardInput.WriteLine(message);
         }
 
         public string ReceiveResponse()
         {
-            throw new NotImplementedException();
+            // Try to read from the queue if not empty, if it is empty, wait for a message to arrive
+            if (!messages.TryDequeue(out string result) || messageHandle.WaitOne(responseTimeout))
+            {
+                messages.TryDequeue(out result);
+            }
+
+            return result;
         }
     }
 }
