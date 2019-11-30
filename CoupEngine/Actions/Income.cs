@@ -24,5 +24,10 @@ namespace CoupEngine.Turns
             engine.MoneyPool -= incomeGained;
             this.ActivePlayer.Money += incomeGained;
         }
+
+        public override string SerializeAction()
+        {
+            return $"IN {ActivePlayer.PlayerId}";
+        }
     }
 }

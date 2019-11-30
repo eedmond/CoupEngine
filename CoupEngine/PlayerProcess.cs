@@ -81,5 +81,15 @@ namespace CoupEngine
                     break;
             }
         }
+
+        public void SendMessage(string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ReceiveResponse()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

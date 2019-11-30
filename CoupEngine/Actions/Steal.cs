@@ -32,5 +32,10 @@ namespace CoupEngine.Actions
             PlayerToStealFrom.Money -= amountStolen;
             ActivePlayer.Money += amountStolen;
         }
+
+        public override string SerializeAction()
+        {
+            return $"CAP ${ActivePlayer.PlayerId}";
+        }
     }
 }
