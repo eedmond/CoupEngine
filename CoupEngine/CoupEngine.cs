@@ -8,8 +8,11 @@ namespace CoupEngine
     internal class CoupEngine
     {
         public List<Player> PlayerList { get; private set; }
+        public RolePool RolePool { get; private set; }
+
         private int ActivePlayerIndex { get; set; } = 0;
         private Player ActivePlayer { get { return PlayerList[ActivePlayerIndex]; } }
+        
 
         public IEnumerable<Player> OtherPlayers(Player player)
         {
