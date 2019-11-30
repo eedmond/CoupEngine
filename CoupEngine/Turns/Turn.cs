@@ -4,14 +4,8 @@ using System.Text;
 
 namespace CoupEngine
 {
-
-    enum TurnActionType
+    internal abstract class Turn
     {
-        Income,
-        Duke
-    }
-
-    class Turn
-    {
+        public abstract void Perform(CoupEngine engine);
     }
 }
