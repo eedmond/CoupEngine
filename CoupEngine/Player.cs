@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CoupEngine
 {
-    class Player
+    public class Player
     {
     }
 }

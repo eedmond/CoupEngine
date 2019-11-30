@@ -6,14 +6,20 @@ namespace CoupEngine
 {
     internal class CoupEngine
     {
-        TurnManager turnManager;
+        public List<Player> PlayerList { get; private set; }
+        public int ActivePlayerIndex { get; private set; } = 0;
+        public Player ActivePlayer { get { return PlayerList[ActivePlayerIndex]; } }
+
+        private Dictionary<TurnActionType, Turn> turnLookup;
 
         public void PlayGame()
         {
-            while (turnManager.NumPlayersRemaining > 1)
+            while (PlayerList.Count > 1)
             {
-                TurnActionType turn = turnManager.NextPlayer().ChooseNextAction();
+                TurnActionType turnType = ActivePlayer.GetTurnAction();
 
+                Turn turn = turnLookup[turnType];
+                turn.Perform(this);
             }
         }
     }
