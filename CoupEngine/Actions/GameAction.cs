@@ -14,7 +14,11 @@ namespace CoupEngine
         public void Perform(CoupEngine engine)
         {
             BroadcastAction(engine);
-            AskForResponses(engine);
+
+            if (AcceptsResponses)
+            {
+                AskForResponses(engine);
+            }
 
             if (IsValid)
             {
@@ -52,7 +56,7 @@ namespace CoupEngine
             {
                 var response = player.GetResponse(this);
 
-                if ((response != null) && this.AcceptsResponses)
+                if (response != null)
                 {
                     response.Perform(engine);
 
