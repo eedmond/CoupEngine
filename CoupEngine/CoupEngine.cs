@@ -55,6 +55,7 @@ namespace CoupEngine
 
         public void EliminatePlayer(Player player)
         {
+            // Update active player index accordingly
             int eliminatedPlayerIndex = GetPlayerIndex(player);
 
             if (eliminatedPlayerIndex < ActivePlayerIndex)
@@ -67,6 +68,7 @@ namespace CoupEngine
                 ActivePlayerIndex = InvalidPlayerIndex;
             }
 
+            // Notify players of elimination
             player.NotifyEliminated();
             PlayerList.Remove(player);
 
