@@ -6,7 +6,7 @@ namespace CoupEngine
     {
         static void Main(string[] args)
         {
-            CoupEngine engine = new CoupEngine();
+            CoupEngine engine = new CoupEngine(args);
             engine.PlayGame();
         }
     }

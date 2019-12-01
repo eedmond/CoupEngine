@@ -12,6 +12,8 @@ namespace CoupEngine
         public RolePool RolePool { get; private set; }
 
         private int ActivePlayerIndex { get; set; } = 0;
+        private const int InvalidPlayerIndex = -1;
+        private int NextActivePlayerIndex;
         private Player ActivePlayer { get { return PlayerList[ActivePlayerIndex]; } }
         
 
@@ -30,6 +32,15 @@ namespace CoupEngine
 
         public int MoneyPool = 30;
 
+        public CoupEngine(string[] playerProcessStrings)
+        {
+            for (int i = 0; i < playerProcessStrings.Length; ++i)
+            {
+                throw new NotImplementedException("Deal roles correctly");
+                PlayerList.Add(new Player(i, Role.Ambassador, Role.Assassin, playerProcessStrings[i]));
+            }
+        }
+
         public void PlayGame()
         {
             while (PlayerList.Count > 1)
@@ -37,7 +48,7 @@ namespace CoupEngine
                 GameAction turn = ActivePlayer.ChooseNextAction(this);
                 turn.Perform(this);
 
-                ActivePlayerIndex = (ActivePlayerIndex + 1) % PlayerList.Count;
+                UpdateActivePlayerIndex();
             }
 
             PlayerList[0].NotifyWin();
@@ -45,6 +56,20 @@ namespace CoupEngine
 
         public void EliminatePlayer(Player player)
         {
+            // Update active player index accordingly
+            int eliminatedPlayerIndex = GetPlayerIndex(player);
+
+            if (eliminatedPlayerIndex < ActivePlayerIndex)
+            {
+                --ActivePlayerIndex;
+            }
+            else if (eliminatedPlayerIndex == ActivePlayerIndex)
+            {
+                NextActivePlayerIndex = ActivePlayerIndex;
+                ActivePlayerIndex = InvalidPlayerIndex;
+            }
+
+            // Notify players of elimination
             player.NotifyEliminated();
             PlayerList.Remove(player);
 
@@ -58,6 +83,21 @@ namespace CoupEngine
         public Player LookupPlayerId(int playerId)
         {
             return PlayerList.Where(p => p.PlayerId == playerId).SingleOrDefault();
+        }
+
+        private void UpdateActivePlayerIndex()
+        {
+            // Sets ActivePlayerIndex to the next player.
+            if (ActivePlayerIndex != InvalidPlayerIndex)
+            {
+                // Increment ActivePlayerIndex
+                ActivePlayerIndex = (ActivePlayerIndex + 1) % PlayerList.Count;
+            }
+            else
+            {
+                // The active player last turn was killed, set the next active player index directly
+                ActivePlayerIndex = NextActivePlayerIndex % PlayerList.Count;
+            }
         }
 
         private int GetPlayerIndex(Player player)

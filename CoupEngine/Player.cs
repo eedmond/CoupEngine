@@ -68,6 +68,14 @@ namespace CoupEngine
 
     internal class Player
     {
+        public Player(int id, Role role1, Role role2, string processString)
+        {
+            PlayerId = id;
+            this.role1 = role1;
+            this.role2 = role2;
+            process = new PlayerProcess(processString);
+        }
+
         public void LoseLife(CoupEngine engine)
         {
             // This is an edge case that can happen with challenges + assassinate (and the player has only 1 life left)
