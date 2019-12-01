@@ -6,6 +6,8 @@ namespace CoupEngine.Actions
 {
     internal class Duke : GameAction
     {
+        private const int MoneyGained = 3;
+
         public Duke(Player actingPlayer)
             : base(actingPlayer)
         {
@@ -18,7 +20,7 @@ namespace CoupEngine.Actions
 
         public override void PerformInternal(CoupEngine engine)
         {
-            int moneyToGain = Math.Min(3, engine.MoneyPool);
+            int moneyToGain = Math.Min(MoneyGained, engine.MoneyPool);
             engine.MoneyPool -= moneyToGain;
             ActivePlayer.Money += 3;
         }

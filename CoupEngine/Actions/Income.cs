@@ -6,7 +6,7 @@ namespace CoupEngine.Turns
 {
     internal class Income : GameAction
     {
-        private const int MoneyGained = 3;
+        private const int MoneyGained = 1;
 
         public Income(Player activePlayer) : base(activePlayer)
         {

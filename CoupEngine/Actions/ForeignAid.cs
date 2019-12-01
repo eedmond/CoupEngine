@@ -6,7 +6,7 @@ namespace CoupEngine.Turns
 {
     internal class ForeignAid : GameAction
     {
-        private const int MoneyGained = 3;
+        private const int MoneyGained = 2;
 
         public ForeignAid(Player activePlayer) : base(activePlayer)
         {
