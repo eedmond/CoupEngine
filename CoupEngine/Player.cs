@@ -73,7 +73,7 @@ namespace CoupEngine
             PlayerId = id;
             this.role1 = role1;
             this.role2 = role2;
-            process = new PlayerProcess(processString);
+            process = new PlayerProcess(processString, id);
         }
 
         public void LoseLife(CoupEngine engine)
@@ -254,6 +254,14 @@ namespace CoupEngine
             // Tell the process that 'player' lost a life and revealed the card 'role'
             var roleStr = ResponseParser.SerializeRole(role);
             process.SendMessage($"L {player.PlayerId} {roleStr}");
+        }
+
+        public void NotifyGameStart(int numPlayers)
+        {
+            Debug.Assert(role2.HasValue);
+            var role1Str = ResponseParser.SerializeRole(role1);
+            var role2Str = ResponseParser.SerializeRole(role2.Value);
+            process.SendMessage($"GLHF {PlayerId} {numPlayers} {role1Str} {role2Str}");
         }
 
         #endregion

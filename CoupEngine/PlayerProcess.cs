@@ -18,12 +18,15 @@ namespace CoupEngine
         }
 
         private readonly TimeSpan responseTimeout = TimeSpan.FromSeconds(3);
+        private readonly int playerId;
         private ConcurrentQueue<string> messages = new ConcurrentQueue<string>();
         private Process process = new Process();
         private AutoResetEvent messageHandle = new AutoResetEvent(false);
 
-        public PlayerProcess(string processString)
+        public PlayerProcess(string processString, int id)
         {
+            playerId = id;
+
             ProcessType processType = ParseProcessType(processString);
 
             ProcessStartInfo startInfo = new ProcessStartInfo();
@@ -87,6 +90,7 @@ namespace CoupEngine
 
         public void SendMessage(string message)
         {
+            Console.WriteLine($"{message} -> {playerId}");
             process.StandardInput.WriteLine(message);
         }
 
@@ -98,6 +102,7 @@ namespace CoupEngine
                 messages.TryDequeue(out result);
             }
 
+            Console.WriteLine($"{result} <- {playerId}");
             return result;
         }
     }

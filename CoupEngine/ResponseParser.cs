@@ -48,7 +48,7 @@ namespace CoupEngine
                 case "CAP":
                     return ParseTargetedAction(words, engine, (target) => new Steal(player, target));
                 case "DUKE":
-                    throw new NotImplementedException(); // We are missing the duke action, oops
+                    return new Duke(player);
 
                 // Always available actions
                 case "IN":
