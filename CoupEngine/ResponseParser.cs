@@ -26,5 +26,10 @@ namespace CoupEngine
         {
             throw new NotImplementedException();
         }
+
+        public Role? ParseRoleLost(string str)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
