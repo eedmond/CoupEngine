@@ -11,6 +11,8 @@ namespace CoupEngine
         public RolePool RolePool { get; private set; }
 
         private int ActivePlayerIndex { get; set; } = 0;
+        private const int InvalidPlayerIndex = -1;
+        private int NextActivePlayerIndex;
         private Player ActivePlayer { get { return PlayerList[ActivePlayerIndex]; } }
         
 
@@ -45,7 +47,7 @@ namespace CoupEngine
                 GameAction turn = ActivePlayer.ChooseNextAction();
                 turn.Perform(this);
 
-                ActivePlayerIndex = (ActivePlayerIndex + 1) % PlayerList.Count;
+                UpdateActivePlayerIndex();
             }
 
             PlayerList[0].NotifyWin();
@@ -53,12 +55,39 @@ namespace CoupEngine
 
         public void EliminatePlayer(Player player)
         {
+            int eliminatedPlayerIndex = GetPlayerIndex(player);
+
+            if (eliminatedPlayerIndex < ActivePlayerIndex)
+            {
+                --ActivePlayerIndex;
+            }
+            else if (eliminatedPlayerIndex == ActivePlayerIndex)
+            {
+                NextActivePlayerIndex = ActivePlayerIndex;
+                ActivePlayerIndex = InvalidPlayerIndex;
+            }
+
             player.NotifyEliminated();
             PlayerList.Remove(player);
 
             foreach (var remainingPlayer in PlayerList)
             {
                 remainingPlayer.NotifyPlayerEliminated(player);
+            }
+        }
+
+        private void UpdateActivePlayerIndex()
+        {
+            // Sets ActivePlayerIndex to the next player.
+            if (ActivePlayerIndex != InvalidPlayerIndex)
+            {
+                // Increment ActivePlayerIndex
+                ActivePlayerIndex = (ActivePlayerIndex + 1) % PlayerList.Count;
+            }
+            else
+            {
+                // The active player last turn was killed, set the next active player index directly
+                ActivePlayerIndex = NextActivePlayerIndex % PlayerList.Count;
             }
         }
 
