@@ -10,7 +10,7 @@ namespace CoupEngine
     // Full list of our protocol:
     // Sending: Every time we send something, the first word designates what happened,
     // then comes any details (who played it, etc), finally ended by a newline.
-    // If we are expecting a response, the last thing before the newline should be a '?' character
+    // If we are expecting a response, the last character of the first word should be a '?' character
     // 
     // Note that all requests/responses should be considered case-insensitive: the process doesn't have to care about receiving/outputing 'AM' vs 'am' vs 'Am'
     //
@@ -77,12 +77,43 @@ namespace CoupEngine
 
         public void LoseLife(CoupEngine engine)
         {
-            // TODO: decide which card to lose, and call LoseLifeInternal with it
-            throw new NotImplementedException();
+            // This is an edge case that can happen with challenges + assassinate (and the player has only 1 life left)
+            if (Eliminated)
+                return;
+
+            // Figure out which role card we want to lose
+            bool loseFirstRole = true;
+            if (role2.HasValue && role1 != role2)
+            {
+                // We have 2 different roles to pick from: ask the process which one it should lose
+                process.SendMessage("L?");
+                var roleStr = process.ReceiveResponse();
+                Role? roleLostResponse = parser.ParseRoleLost(roleStr);
+
+                if (roleLostResponse == null) // Invalid response
+                {
+                    // TODO: log warning
+                    loseFirstRole = true;
+                }
+
+                // Validate that the role returned is actually owned
+                Role roleToLose = roleLostResponse.Value;
+                if (roleToLose != role1 && roleToLose != role2)
+                {
+                    // TODO: log warning
+                    loseFirstRole = true;
+                }
+
+                loseFirstRole = roleToLose != role2;
+            }
+
+            LoseLifeInternal(engine, loseFirstRole);
         }
 
         public GameAction ChooseNextAction()
         {
+            // TODO: enforce the 10+ coin rule for coup'ing
+
             process.SendMessage("A?");
             string response = process.ReceiveResponse();
             GameAction action = parser.ParseAction(response, this);
