@@ -26,7 +26,8 @@ namespace CoupEngine.Turns
 
         public override string SerializeAction()
         {
-            return $"CLAIM {ActivePlayer.PlayerId} ({ClaimedRole})";
+            var claimedRoleStr = ResponseParser.SerializeRole(ClaimedRole);
+            return $"CLAIM {ActivePlayer.PlayerId} {claimedRoleStr}";
         }
     }
 }

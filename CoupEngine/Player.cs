@@ -280,6 +280,6 @@ namespace CoupEngine
         private Role? role2;
 
         private PlayerProcess process;
-        private ResponseParser parser;
+        private ResponseParser parser = new ResponseParser();
     }
 }

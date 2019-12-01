@@ -30,7 +30,8 @@ namespace CoupEngine.Actions
 
         public override string SerializeAction()
         {
-            return $"AM {ActivePlayer.PlayerId}";
+            var roleStr = ResponseParser.SerializeRole(Role.Ambassador);
+            return $"{roleStr} {ActivePlayer.PlayerId}";
         }
     }
 }

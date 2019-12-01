@@ -35,7 +35,8 @@ namespace CoupEngine.Actions
 
         public override string SerializeAction()
         {
-            return $"CAP ${ActivePlayer.PlayerId}";
+            var roleStr = ResponseParser.SerializeRole(Role.Captain);
+            return $"{roleStr} ${ActivePlayer.PlayerId}";
         }
     }
 }
