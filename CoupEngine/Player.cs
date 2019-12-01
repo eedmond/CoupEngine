@@ -48,6 +48,7 @@ namespace CoupEngine
     //
     // Serialization for responses:
     // Responses for actions (the 'A?' or 'R?' request) should be similar to above actions, but no 'actingplayer' id is necessary.
+    // In addition, for response to 'R?', there is the 'N' response which indicates not doing anything
     // In general this should look like:
     //    <role/action> [<target player>]
     // For example:
@@ -102,13 +103,13 @@ namespace CoupEngine
             LoseLifeInternal(engine, loseFirstRole);
         }
 
-        public GameAction ChooseNextAction()
+        public GameAction ChooseNextAction(CoupEngine engine)
         {
             // TODO: enforce the 10+ coin rule for coup'ing
 
             process.SendMessage("A?");
             string response = process.ReceiveResponse();
-            GameAction action = parser.ParseAction(response, this);
+            GameAction action = parser.ParseAction(response, this, engine);
             
             if (action == null) // invalid response
             {
@@ -129,11 +130,11 @@ namespace CoupEngine
             process.SendMessage(action.SerializeAction());
         }
 
-        public ResponseAction GetResponse()
+        public ResponseAction GetResponse(GameAction originalAction)
         {
             process.SendMessage("R?");
             string response = process.ReceiveResponse();
-            ResponseAction action = parser.ParseResponse(response, this);
+            ResponseAction action = parser.ParseResponse(response, this, originalAction);
 
             if (action == null) // invalid response
             {
@@ -198,7 +199,7 @@ namespace CoupEngine
 
         public IEnumerable<Role> LookAndReturnToPool(IList<Role> drawnCards)
         {
-            var roleStrings = drawnCards.Select(r => parser.SerializeRole(r));
+            var roleStrings = drawnCards.Select(r => ResponseParser.SerializeRole(r));
             var allRoles = String.Join(' ', roleStrings);
 
             process.SendMessage($"AM? {allRoles}");
@@ -243,7 +244,8 @@ namespace CoupEngine
         public void NotifyLifeLost(Player player, Role role)
         {
             // Tell the process that 'player' lost a life and revealed the card 'role'
-            process.SendMessage($"L {player.PlayerId} {parser.SerializeRole(role)}");
+            var roleStr = ResponseParser.SerializeRole(role);
+            process.SendMessage($"L {player.PlayerId} {roleStr}");
         }
 
         #endregion

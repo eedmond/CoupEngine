@@ -42,7 +42,7 @@ namespace CoupEngine
         {
             foreach (Player player in engine.OtherPlayers(ActivePlayer))
             {
-                player.NotifyAction(this, ActivePlayer);
+                player.NotifyAction(this);
             }
         }
 
@@ -50,7 +50,7 @@ namespace CoupEngine
         {
             foreach (Player player in engine.OtherPlayers(ActivePlayer))
             {
-                var response = player.GetResponse();
+                var response = player.GetResponse(this);
 
                 if ((response != null) && this.AcceptsResponses)
                 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CoupEngine
@@ -33,7 +34,7 @@ namespace CoupEngine
         {
             while (PlayerList.Count > 1)
             {
-                GameAction turn = ActivePlayer.ChooseNextAction();
+                GameAction turn = ActivePlayer.ChooseNextAction(this);
                 turn.Perform(this);
 
                 ActivePlayerIndex = (ActivePlayerIndex + 1) % PlayerList.Count;
@@ -51,6 +52,12 @@ namespace CoupEngine
             {
                 remainingPlayer.NotifyPlayerEliminated(player);
             }
+        }
+
+        // Converts player id to Player instance. Returns null on failure
+        public Player LookupPlayerId(int playerId)
+        {
+            return PlayerList.Where(p => p.PlayerId == playerId).SingleOrDefault();
         }
 
         private int GetPlayerIndex(Player player)
