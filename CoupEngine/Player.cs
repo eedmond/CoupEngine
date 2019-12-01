@@ -41,7 +41,7 @@ namespace CoupEngine
     // Whenever the engine wants a response from a player, one of these will be sent:
     //   R? : request for a 'response' to an action another player took (challenge or claim)
     //   L? : losing a life, request which card they want to reveal (this doesn't happen if they only have one choice)
-    //         Expected response: L <role>
+    //         Expected response: <role>
     //   A? : request for what action they want to take (they are the active player now)
     //   AM? <role> <role> : here are the cards drawn by the Ambassador action, request for what they want to discard
     //                       Expected response: AM <role> <role>
@@ -96,16 +96,18 @@ namespace CoupEngine
                     // TODO: log warning
                     loseFirstRole = true;
                 }
-
-                // Validate that the role returned is actually owned
-                Role roleToLose = roleLostResponse.Value;
-                if (roleToLose != role1 && roleToLose != role2)
+                else
                 {
-                    // TODO: log warning
-                    loseFirstRole = true;
-                }
+                    // Validate that the role returned is actually owned
+                    Role roleToLose = roleLostResponse.Value;
+                    if (roleToLose != role1 && roleToLose != role2)
+                    {
+                        // TODO: log warning
+                        loseFirstRole = true;
+                    }
 
-                loseFirstRole = roleToLose != role2;
+                    loseFirstRole = roleToLose != role2;
+                }
             }
 
             LoseLifeInternal(engine, loseFirstRole);

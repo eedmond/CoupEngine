@@ -144,11 +144,13 @@ namespace CoupEngine
 
             str = str.Trim().ToUpper();
 
-            if (!str.StartsWith("L"))
-                return null;
+            //if (!str.StartsWith("L"))
+            //    return null;
 
-            var roleStr = str.Substring("L".Length).Trim();
-            return DeserializeRole(roleStr);
+            //var roleStr = str.Substring("L".Length).Trim();
+            //return DeserializeRole(roleStr);
+
+            return DeserializeRole(str);
         }
 
         private static Role? DeserializeRole(string str)

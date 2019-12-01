@@ -31,7 +31,7 @@ def main():
 
             elif nextInput[0].lower() == 'l':
                 print (role_to_string(role2))
-                role2 = null
+                role2 = None
 
             elif nextInput[0].lower() == 'a':
                 if (money < 7):
@@ -65,6 +65,18 @@ def parse_role(role_str):
         return Role.Contessa
     elif role_str.lower() == 'duke':
         return Role.Duke
+
+def role_to_string(role):
+    if role == Role.Ambassador:
+        return "am"
+    if role == Role.Assassin:
+        return "as"
+    if role == Role.Captain:
+        return "cap"
+    if role == Role.Contessa:
+        return "con"
+    if role == Role.Duke:
+        return "duke"
 
 
 if __name__ == "__main__":

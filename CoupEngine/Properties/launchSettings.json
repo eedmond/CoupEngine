@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CoupEngine": {
+      "commandName": "Project",
+      "commandLineArgs": "SamplePlayers\\\\BasicPlayer.py SamplePlayers\\\\BasicPlayer.py SamplePlayers\\\\BasicPlayer.py SamplePlayers\\\\BasicPlayer.py"
+    }
+  }
+}

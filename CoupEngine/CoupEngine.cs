@@ -9,7 +9,7 @@ namespace CoupEngine
 {
     internal class CoupEngine
     {
-        public List<Player> PlayerList { get; private set; }
+        public List<Player> PlayerList { get; } = new List<Player>();
         public RolePool RolePool { get; private set; }
 
         private int ActivePlayerIndex { get; set; } = 0;

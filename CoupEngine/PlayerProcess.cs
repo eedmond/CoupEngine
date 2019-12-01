@@ -40,8 +40,11 @@ namespace CoupEngine
             process.StartInfo = startInfo;
             process.OutputDataReceived += (s, a) =>
             {
-                messages.Enqueue(a.Data);
-                messageHandle.Set();
+                if (a.Data != null)
+                {
+                    messages.Enqueue(a.Data);
+                    messageHandle.Set();
+                }
             };
 
             process.Start();
@@ -97,10 +100,16 @@ namespace CoupEngine
         public string ReceiveResponse()
         {
             // Try to read from the queue if not empty, if it is empty, wait for a message to arrive
-            if (!messages.TryDequeue(out string result) || messageHandle.WaitOne(responseTimeout))
+
+            if (!messages.TryDequeue(out string result))
             {
-                messages.TryDequeue(out result);
+                if (messageHandle.WaitOne(responseTimeout))
+                {
+                    messages.TryDequeue(out result);
+                }
             }
+
+            messageHandle.Reset();
 
             Console.WriteLine($"{result} <- {playerId}");
             return result;

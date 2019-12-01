@@ -8,6 +8,7 @@ namespace CoupEngine
         {
             CoupEngine engine = new CoupEngine(args);
             engine.PlayGame();
+            Console.ReadLine();
         }
     }
 }
