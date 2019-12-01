@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 
 namespace CoupEngine
 {
     internal class RolePool
     {
-        public RolePool(Role role1, Role role2, Role role3)
+        public RolePool(IEnumerable<Role> initialRoles)
         {
-            roles = new List<Role> { role1, role2, role3 };
+            roles = initialRoles.ToList();
         }
 
         public Role DrawRandomRole()
