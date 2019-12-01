@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -16,6 +17,11 @@ namespace CoupEngine
             Javascript
         }
 
+        private readonly TimeSpan responseTimeout = TimeSpan.FromSeconds(3);
+        private ConcurrentQueue<string> messages = new ConcurrentQueue<string>();
+        private Process process = new Process();
+        private AutoResetEvent messageHandle = new AutoResetEvent(false);
+
         public PlayerProcess(string processString)
         {
             ProcessType processType = ParseProcessType(processString);
@@ -28,17 +34,15 @@ namespace CoupEngine
 
             SetStartArguments(startInfo, processString, processType);
 
-            Process p = new Process();
-            p.StartInfo = startInfo;
-            p.OutputDataReceived += (s, a) =>
+            process.StartInfo = startInfo;
+            process.OutputDataReceived += (s, a) =>
             {
-                Console.WriteLine("Received: {0}", a.Data);
-                p.StandardInput.WriteLine("Greetings");
+                messages.Enqueue(a.Data);
+                messageHandle.Set();
             };
 
-            p.Start();
-            p.BeginOutputReadLine();
-            p.WaitForExit();
+            process.Start();
+            process.BeginOutputReadLine();
         }
 
         private ProcessType ParseProcessType(string processString)
@@ -83,13 +87,18 @@ namespace CoupEngine
 
         public void SendMessage(string message)
         {
-            // Note: if 'message' doesn't have a newline at the end, one should be added
-            throw new NotImplementedException();
+            process.StandardInput.WriteLine(message);
         }
 
         public string ReceiveResponse()
         {
-            throw new NotImplementedException();
+            // Try to read from the queue if not empty, if it is empty, wait for a message to arrive
+            if (!messages.TryDequeue(out string result) || messageHandle.WaitOne(responseTimeout))
+            {
+                messages.TryDequeue(out result);
+            }
+
+            return result;
         }
     }
 }
