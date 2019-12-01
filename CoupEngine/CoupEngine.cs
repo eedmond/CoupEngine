@@ -29,6 +29,15 @@ namespace CoupEngine
 
         public int MoneyPool = 30;
 
+        public CoupEngine(string[] playerProcessStrings)
+        {
+            for (int i = 0; i < playerProcessStrings.Length; ++i)
+            {
+                throw new NotImplementedException("Deal roles correctly");
+                PlayerList.Add(new Player(i, Role.Ambassador, Role.Assassin, playerProcessStrings[i]));
+            }
+        }
+
         public void PlayGame()
         {
             while (PlayerList.Count > 1)

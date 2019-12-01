@@ -67,6 +67,14 @@ namespace CoupEngine
 
     internal class Player
     {
+        public Player(int id, Role role1, Role role2, string processString)
+        {
+            PlayerId = id;
+            this.role1 = role1;
+            this.role2 = role2;
+            process = new PlayerProcess(processString);
+        }
+
         public void LoseLife(CoupEngine engine)
         {
             // TODO: decide which card to lose, and call LoseLifeInternal with it
